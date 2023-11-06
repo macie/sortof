@@ -1,5 +1,7 @@
 # sortof
 
+[![Quality check status](https://github.com/macie/sortof/actions/workflows/check.yml/badge.svg)](https://github.com/macie/sortof/actions/workflows/check.yml)
+
 **sortof** provides implementations of ~~peculiar~~ _carefully selected_ sorting algorithms as a:
 
 - collection of CLI tools for sorting input, line by line (similar to _[POSIX sort](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sort.html)_),

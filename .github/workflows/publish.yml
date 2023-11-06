@@ -1,0 +1,54 @@
+name: Publish
+on:
+  push:
+    tags:
+      - 'cli/v*'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 'stable'
+
+      - name: Install dependencies
+        run: make
+
+      - run: make dist
+
+      - name: Save build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: binaries
+          path: dist/
+          retention-days: 14
+          if-no-files-found: error
+
+  release:
+    needs: build
+
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: Extract build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: binaries
+
+      - name: Prepare release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          generateReleaseNotes: true
+          artifacts: "./dist/*"

@@ -4,9 +4,12 @@
 # Ignore everything
 *
 
-# But not these files...
+# Allow CI configs
 !/.gitignore
+!/.github/workflows/*.yml
+!/Makefile
 
+# Allow source code...
 !*.go
 !go.sum
 !go.mod
@@ -14,7 +17,5 @@
 !README.md
 !LICENSE
 
-!Makefile
-
-# ...even if they are in subdirectories
+# ...also in subdirectories
 !*/
