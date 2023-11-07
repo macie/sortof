@@ -50,9 +50,9 @@ Use `make` (GNU or BSD):
 ### Versioning
 
 The repo contains CLI and Go module which can be developed with different pace.
-Commits with versions are tagged using [semantic versioning](https://semver.org/):
-- `vX.X.X` - versions of Go module
-- `cli/vX.X.X` - versions of command-line utility.
+Commits with versions are tagged with:
+- `vX.X.X` (_[semantic versioning](https://semver.org/)_) - versions of Go module
+- `cli/vYYYY.0M.MICRO` (_[calendar versioning](https://calver.org/)_) - versions of command-line utility.
 
 ## License
 
