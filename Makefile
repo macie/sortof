@@ -1,6 +1,8 @@
 .POSIX:
 .SUFFIXES:
 
+CLI_DIR = ./cmd/sortof
+
 # MAIN TARGETS
 
 all: install-dependencies
@@ -32,7 +34,7 @@ build: check test
 		CURRENT_COMMIT_TAG="$$(TZ=UTC git --no-pager show --quiet --abbrev=12 --date='format-local:%Y%m%d%H%M%S' --format='%cd-%h')"; \
 		PSEUDOVERSION="$${PREV_VER_TAG:-0.0.0}-$$CURRENT_COMMIT_TAG"; \
 		VERSION="$${CURRENT_VER_TAG:-$$PSEUDOVERSION}"; \
-		go build -C cli/ -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../dist/sortof'; \
+		go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../../dist/sortof'; \
 
 dist: check test
 	@echo '# Create release binaries in ./dist' >&2
@@ -41,9 +43,9 @@ dist: check test
 		CURRENT_COMMIT_TAG="$$(TZ=UTC git --no-pager show --quiet --abbrev=12 --date='format-local:%Y%m%d%H%M%S' --format='%cd-%h')"; \
 		PSEUDOVERSION="$${PREV_VER_TAG:-0.0.0}-$$CURRENT_COMMIT_TAG"; \
 		VERSION="$${CURRENT_VER_TAG:-$$PSEUDOVERSION}"; \
-		GOOS=openbsd GOARCH=amd64 go build -C cli/ -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../dist/sortof-openbsd_amd64'; \
-		GOOS=linux GOARCH=amd64 go build -C cli/ -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../dist/sortof-linux_amd64'; \
-		GOOS=windows GOARCH=amd64 go build -C cli/ -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../dist/sortof-windows_amd64.exe'; \
+		GOOS=openbsd GOARCH=amd64 go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../../dist/sortof-openbsd_amd64'; \
+		GOOS=linux GOARCH=amd64 go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../../dist/sortof-linux_amd64'; \
+		GOOS=windows GOARCH=amd64 go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../../dist/sortof-windows_amd64.exe'; \
 
 	@echo '# Create binaries checksum' >&2
 	@sha256sum ./dist/* >./dist/sha256sum.txt

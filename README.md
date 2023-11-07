@@ -5,8 +5,33 @@
 
 **sortof** provides implementations of ~~peculiar~~ _carefully selected_ sorting algorithms as a:
 
-- collection of CLI tools for sorting input, line by line (similar to _[POSIX sort](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sort.html)_),
+- CLI tool for sorting input, line by line (similar to _[POSIX sort](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/sort.html)_),
 - Go module with functions for sorting slices (similar to _[slices.Sort()](https://pkg.go.dev/slices#Sort)_).
+
+Implemented algorithms:
+
+- [bogosort](https://en.wikipedia.org/wiki/Bogosort)
+- [slowsort](https://en.wikipedia.org/wiki/Slowsort)
+- [stalinsort](https://mastodon.social/@mathew/100958177234287431).
+
+## Usage
+
+```sh
+$ cat letters.txt
+c
+a
+b
+$ sortof bogo -t 10s letters.txt
+a
+b
+c
+```
+
+## Installation
+
+Download [latest stable release from GitHub](https://github.com/macie/sortof/releases/latest) .
+
+You can also build it manually with commands: `make && make build`.
 
 ## Development
 
