@@ -1,3 +1,4 @@
+// Package sortof provides functions for sorting slices.
 package sortof
 
 import (
