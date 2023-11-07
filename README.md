@@ -1,5 +1,6 @@
 # sortof
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/macie/sortof.svg)](https://pkg.go.dev/github.com/macie/sortof)
 [![Quality check status](https://github.com/macie/sortof/actions/workflows/check.yml/badge.svg)](https://github.com/macie/sortof/actions/workflows/check.yml)
 
 **sortof** provides implementations of ~~peculiar~~ _carefully selected_ sorting algorithms as a:
