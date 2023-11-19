@@ -12,6 +12,11 @@ func main() {
 	log.SetFlags(0)
 	log.SetPrefix("sortof: ")
 
+	if err := Sandbox(); err != nil {
+		log.Println(err)
+		os.Exit(1)
+	}
+
 	config, err := NewAppConfig(os.Args[1:])
 	if err != nil {
 		log.Println(err)

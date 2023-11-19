@@ -13,7 +13,7 @@ func TestNewAppConfig(t *testing.T) {
 		want AppConfig
 	}{
 		{[]string{"-h"}, AppConfig{ExitMessage: helpMsg}},
-		{[]string{"-v"}, AppConfig{ExitMessage: "sortof local-dev"}},
+		{[]string{"-v"}, AppConfig{ExitMessage: "sortof local-dev (hardened)"}},
 		{[]string{"bogo"}, AppConfig{SortFunc: BogosortFile}},
 		{[]string{"bogo", "some_file"}, AppConfig{SortFunc: BogosortFile, Files: []string{"some_file"}}},
 		{[]string{"bogo", "-t", "1s"}, AppConfig{SortFunc: BogosortFile, Timeout: time.Second}},
