@@ -58,6 +58,11 @@ Commits with versions are tagged with:
 - `vX.X.X` (_[semantic versioning](https://semver.org/)_) - versions of Go module
 - `cli/vYYYY.0M.MICRO` (_[calendar versioning](https://calver.org/)_) - versions of command-line utility.
 
+### Security hardening
+
+On modern Linuxes and OpenBSD, CLI application has restricted access to kernel
+calls with [seccomp](https://en.wikipedia.org/wiki/Seccomp) and [pledge](https://man.openbsd.org/pledge.2).
+
 ## License
 
 [MIT](./LICENSE)

@@ -62,7 +62,7 @@ func NewAppConfig(cliArgs []string) (AppConfig, error) {
 		return config, nil
 	}
 	if *showVersion {
-		config.ExitMessage = fmt.Sprintf("sortof %s", AppVersion)
+		config.ExitMessage = config.Version()
 		return config, nil
 	}
 
@@ -105,6 +105,15 @@ func (c AppConfig) Equal(other AppConfig) bool {
 		reflect.DeepEqual(c.Files, other.Files) &&
 		c.Timeout == other.Timeout &&
 		c.ExitMessage == other.ExitMessage
+}
+
+// Version returns string with full version description.
+func (c AppConfig) Version() string {
+	build := ""
+	if IsHardened {
+		build = " (hardened)"
+	}
+	return fmt.Sprintf("sortof %s%s", AppVersion, build)
 }
 
 // NewAppContext returns a cancellable context which is:

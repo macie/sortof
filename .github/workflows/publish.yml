@@ -26,6 +26,11 @@ jobs:
         with:
           go-version: 'stable'
 
+      - name: Setup seccomp
+        uses: awalsh128/cache-apt-pkgs-action@44c33b32f808cdddd5ac0366d70595ed63661ed8 # v1.3.1
+        with:
+          packages: libseccomp-dev
+
       - name: Install dependencies
         run: make
 
