@@ -1,15 +1,10 @@
 package main
 
 import (
-	"context"
-	"io"
-	"reflect"
 	"regexp"
 	"strings"
 	"testing"
 	"time"
-
-	"github.com/google/go-cmp/cmp"
 )
 
 func TestNewAppConfig(t *testing.T) {
@@ -39,9 +34,6 @@ func TestNewAppConfig(t *testing.T) {
 			SortFunc: StalinsortFile, Timeout: 2 * time.Hour, Files: []string{"some_file", "-"},
 		}},
 	}
-	sortFuncCmp := cmp.Transformer("sortFunc", func(in func(context.Context, io.ReadCloser) ([]string, error)) uintptr {
-		return reflect.ValueOf(in).Pointer()
-	})
 	for _, tc := range testcases {
 		tc := tc
 		t.Run(strings.Join(tc.args, "_"), func(t *testing.T) {
@@ -50,7 +42,7 @@ func TestNewAppConfig(t *testing.T) {
 			if err != nil {
 				t.Errorf("NewAppConfig(%v) returns error: %v", tc.args, err)
 			}
-			if !cmp.Equal(got, tc.want, sortFuncCmp) {
+			if !got.Equal(tc.want) {
 				t.Errorf("NewAppConfig(%v) = %v, want %v", tc.args, got, tc.want)
 			}
 		})

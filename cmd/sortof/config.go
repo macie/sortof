@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"os/signal"
+	"reflect"
 	"time"
 )
 
@@ -96,6 +97,14 @@ func NewAppConfig(cliArgs []string) (AppConfig, error) {
 	}
 
 	return config, nil
+}
+
+// Equal reports whether two AppConfigs are equal. It is used in tests.
+func (c AppConfig) Equal(other AppConfig) bool {
+	return reflect.ValueOf(c.SortFunc).Pointer() == reflect.ValueOf(other.SortFunc).Pointer() &&
+		reflect.DeepEqual(c.Files, other.Files) &&
+		c.Timeout == other.Timeout &&
+		c.ExitMessage == other.ExitMessage
 }
 
 // NewAppContext returns a cancellable context which is:
