@@ -25,6 +25,7 @@ const helpMsg = "sortof - sort lines of text files\n" +
 	"\n" +
 	"Algorithms:\n" +
 	"   bogo          Bogosort\n" +
+	"   miracle       Miraclesort\n" +
 	"   slow          Slowsort\n" +
 	"   stalin        Stalinsort\n" +
 	"\n" +
@@ -70,6 +71,8 @@ func NewAppConfig(cliArgs []string) (AppConfig, error) {
 	switch cliArgs[0] {
 	case "bogo":
 		config.SortFunc = BogosortFile
+	case "miracle":
+		config.SortFunc = MiraclesortFile
 	case "slow":
 		config.SortFunc = SlowsortFile
 	case "stalin":

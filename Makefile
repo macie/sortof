@@ -36,6 +36,8 @@ e2e:
 	./dist/sortof -h
 	./dist/sortof bogo <test_case.unsorted | diff test_case.sorted -
 	./dist/sortof bogo -t 5s <test_case.unsorted | diff test_case.sorted -
+	./dist/sortof miracle <test_case.sorted | diff test_case.sorted -
+	./dist/sortof miracle -t 1ms <test_case.unsorted 2>&1 | grep '^sortof: '
 	./dist/sortof slow <test_case.unsorted | diff test_case.sorted -
 	./dist/sortof slow -t 100ms <test_case.unsorted | diff test_case.sorted -
 	./dist/sortof stalin <test_case.unsorted | diff test_case.stalinsorted -
