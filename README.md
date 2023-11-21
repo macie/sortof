@@ -11,6 +11,7 @@
 Implemented algorithms:
 
 - [bogosort](https://en.wikipedia.org/wiki/Bogosort)
+- [miraclesort](https://en.wikipedia.org/wiki/Bogosort#miracle_sort) (currently module only)
 - [slowsort](https://en.wikipedia.org/wiki/Slowsort)
 - [stalinsort](https://mastodon.social/@mathew/100958177234287431).
 
