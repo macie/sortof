@@ -3,6 +3,7 @@ package sortof
 import (
 	"cmp"
 	"context"
+	"fmt"
 	"math"
 	"slices"
 	"testing"
@@ -15,17 +16,22 @@ func TestBogosortFloat(t *testing.T) {
 		{math.MaxFloat64, 2, 0, -1, math.SmallestNonzeroFloat64, math.Log(-1)},
 	}
 	for _, tc := range testcases {
-		collection := slices.Clone(tc)
+		tc := tc
+		t.Run(fmt.Sprint(tc), func(t *testing.T) {
+			t.Parallel()
 
-		err := Bogosort(ctx, collection)
-		if err != nil {
-			t.Errorf("Bogosort(%v, %v) returns error: %v", ctx, tc, err)
-		}
-		if !slices.IsSorted(collection) {
-			want := slices.Clone(tc)
-			slices.Sort(want)
-			t.Errorf("Bogosort(%v, %v) cannot sort; got %v, want %v", ctx, tc, collection, want)
-		}
+			collection := slices.Clone(tc)
+
+			err := Bogosort(ctx, collection)
+			if err != nil {
+				t.Errorf("Bogosort(%v, %v) returns error: %v", ctx, tc, err)
+			}
+			if !slices.IsSorted(collection) {
+				want := slices.Clone(tc)
+				slices.Sort(want)
+				t.Errorf("Bogosort(%v, %v) cannot sort; got %v, want %v", ctx, tc, collection, want)
+			}
+		})
 	}
 }
 
@@ -36,17 +42,22 @@ func TestBogosortInt(t *testing.T) {
 		{math.MaxInt, 2, 0, -1, math.MinInt},
 	}
 	for _, tc := range testcases {
-		collection := slices.Clone(tc)
+		tc := tc
+		t.Run(fmt.Sprint(tc), func(t *testing.T) {
+			t.Parallel()
 
-		err := Bogosort(ctx, collection)
-		if err != nil {
-			t.Errorf("Bogosort(%v, %v) returns error: %v", ctx, tc, err)
-		}
-		if !slices.IsSorted(collection) {
-			want := slices.Clone(tc)
-			slices.Sort(want)
-			t.Errorf("Bogosort(%v, %v) cannot sort; got %v, want %v", ctx, tc, collection, want)
-		}
+			collection := slices.Clone(tc)
+
+			err := Bogosort(ctx, collection)
+			if err != nil {
+				t.Errorf("Bogosort(%v, %v) returns error: %v", ctx, tc, err)
+			}
+			if !slices.IsSorted(collection) {
+				want := slices.Clone(tc)
+				slices.Sort(want)
+				t.Errorf("Bogosort(%v, %v) cannot sort; got %v, want %v", ctx, tc, collection, want)
+			}
+		})
 	}
 }
 
@@ -59,17 +70,22 @@ func TestBogosortString(t *testing.T) {
 		{"a", "", "b"},
 	}
 	for _, tc := range testcases {
-		collection := slices.Clone(tc)
+		tc := tc
+		t.Run(fmt.Sprint(tc), func(t *testing.T) {
+			t.Parallel()
 
-		err := Bogosort(ctx, collection)
-		if err != nil {
-			t.Errorf("Bogosort(%v, %v) returns error: %v", ctx, tc, err)
-		}
-		if !slices.IsSorted(collection) {
-			want := slices.Clone(tc)
-			slices.Sort(want)
-			t.Errorf("Bogosort(%v, %v) cannot sort; got %v, want %v", ctx, tc, collection, want)
-		}
+			collection := slices.Clone(tc)
+
+			err := Bogosort(ctx, collection)
+			if err != nil {
+				t.Errorf("Bogosort(%v, %v) returns error: %v", ctx, tc, err)
+			}
+			if !slices.IsSorted(collection) {
+				want := slices.Clone(tc)
+				slices.Sort(want)
+				t.Errorf("Bogosort(%v, %v) cannot sort; got %v, want %v", ctx, tc, collection, want)
+			}
+		})
 	}
 }
 
@@ -81,17 +97,21 @@ func TestBogosortFuncFloat(t *testing.T) {
 		{math.MaxFloat64, 2, 0, -1, math.SmallestNonzeroFloat64, math.Log(-1)},
 	}
 	for _, tc := range testcases {
-		collection := slices.Clone(tc)
+		tc := tc
+		t.Run(fmt.Sprint(tc), func(t *testing.T) {
+			t.Parallel()
+			collection := slices.Clone(tc)
 
-		err := BogosortFunc(ctx, collection, cmpFloats)
-		if err != nil {
-			t.Errorf("BogosortFunc(%v, %v, cmpFloats) returns error: %v", ctx, tc, err)
-		}
-		if !slices.IsSorted(collection) {
-			want := slices.Clone(tc)
-			slices.SortFunc(want, cmpFloats)
-			t.Errorf("BogosortFunc(%v, %v, cmpFloats) cannot sort; got %v, want %v", ctx, tc, collection, want)
-		}
+			err := BogosortFunc(ctx, collection, cmpFloats)
+			if err != nil {
+				t.Errorf("BogosortFunc(%v, %v, cmpFloats) returns error: %v", ctx, tc, err)
+			}
+			if !slices.IsSorted(collection) {
+				want := slices.Clone(tc)
+				slices.SortFunc(want, cmpFloats)
+				t.Errorf("BogosortFunc(%v, %v, cmpFloats) cannot sort; got %v, want %v", ctx, tc, collection, want)
+			}
+		})
 	}
 }
 
@@ -103,17 +123,21 @@ func TestBogosortFuncInt(t *testing.T) {
 		{math.MaxInt, 2, 0, -1, math.MinInt},
 	}
 	for _, tc := range testcases {
-		collection := slices.Clone(tc)
+		tc := tc
+		t.Run(fmt.Sprint(tc), func(t *testing.T) {
+			t.Parallel()
+			collection := slices.Clone(tc)
 
-		err := BogosortFunc(ctx, collection, cmpInts)
-		if err != nil {
-			t.Errorf("BogosortFunc(%v, %v, cmpInts) returns error: %v", ctx, tc, err)
-		}
-		if !slices.IsSorted(collection) {
-			want := slices.Clone(tc)
-			slices.SortFunc(want, cmpInts)
-			t.Errorf("BogosortFunc(%v, %v, cmpInts) cannot sort; got %v, want %v", ctx, tc, collection, want)
-		}
+			err := BogosortFunc(ctx, collection, cmpInts)
+			if err != nil {
+				t.Errorf("BogosortFunc(%v, %v, cmpInts) returns error: %v", ctx, tc, err)
+			}
+			if !slices.IsSorted(collection) {
+				want := slices.Clone(tc)
+				slices.SortFunc(want, cmpInts)
+				t.Errorf("BogosortFunc(%v, %v, cmpInts) cannot sort; got %v, want %v", ctx, tc, collection, want)
+			}
+		})
 	}
 }
 
@@ -127,16 +151,20 @@ func TestBogosortFuncString(t *testing.T) {
 		{"a", "", "b"},
 	}
 	for _, tc := range testcases {
-		collection := slices.Clone(tc)
+		tc := tc
+		t.Run(fmt.Sprint(tc), func(t *testing.T) {
+			t.Parallel()
+			collection := slices.Clone(tc)
 
-		err := BogosortFunc(ctx, collection, cmpStrings)
-		if err != nil {
-			t.Errorf("BogosortFunc(%v, %v, cmpStrings) returns error: %v", ctx, tc, err)
-		}
-		if !slices.IsSorted(collection) {
-			want := slices.Clone(tc)
-			slices.Sort(want)
-			t.Errorf("BogosortFunc(%v, %v, cmpStrings) cannot sort; got %v, want %v", ctx, tc, collection, want)
-		}
+			err := BogosortFunc(ctx, collection, cmpStrings)
+			if err != nil {
+				t.Errorf("BogosortFunc(%v, %v, cmpStrings) returns error: %v", ctx, tc, err)
+			}
+			if !slices.IsSorted(collection) {
+				want := slices.Clone(tc)
+				slices.Sort(want)
+				t.Errorf("BogosortFunc(%v, %v, cmpStrings) cannot sort; got %v, want %v", ctx, tc, collection, want)
+			}
+		})
 	}
 }

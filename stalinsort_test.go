@@ -15,13 +15,18 @@ func TestStalinsortFloat(t *testing.T) {
 		fmt.Sprintf("[-1 2 %v]", math.MaxFloat64): {-1, 2, 0, math.Log(-1), math.MaxFloat64, math.Log(-1)},
 	}
 	for want, tc := range testcases {
-		got, err := Stalinsort(ctx, tc)
-		if err != nil {
-			t.Errorf("Stalinsort(%v, %v) returns error: %v", ctx, tc, err)
-		}
-		if fmt.Sprint(got) != want {
-			t.Errorf("Stalinsort(%v, %v) cannot sort; got %v, want %v", ctx, tc, got, want)
-		}
+		want, tc := want, tc
+		t.Run(fmt.Sprint(tc), func(t *testing.T) {
+			t.Parallel()
+
+			got, err := Stalinsort(ctx, tc)
+			if err != nil {
+				t.Errorf("Stalinsort(%v, %v) returns error: %v", ctx, tc, err)
+			}
+			if fmt.Sprint(got) != want {
+				t.Errorf("Stalinsort(%v, %v) cannot sort; got %v, want %v", ctx, tc, got, want)
+			}
+		})
 	}
 }
 
@@ -32,13 +37,18 @@ func TestStalinsortInt(t *testing.T) {
 		fmt.Sprintf("[%v 2 %v]", math.MinInt, math.MaxInt): {math.MinInt, 2, 0, -1, math.MaxInt, 3},
 	}
 	for want, tc := range testcases {
-		got, err := Stalinsort(ctx, tc)
-		if err != nil {
-			t.Errorf("Stalinsort(%v, %v) returns error: %v", ctx, tc, err)
-		}
-		if fmt.Sprint(got) != want {
-			t.Errorf("Stalinsort(%v, %v) cannot sort; got %v, want %v", ctx, tc, got, want)
-		}
+		want, tc := want, tc
+		t.Run(fmt.Sprint(tc), func(t *testing.T) {
+			t.Parallel()
+
+			got, err := Stalinsort(ctx, tc)
+			if err != nil {
+				t.Errorf("Stalinsort(%v, %v) returns error: %v", ctx, tc, err)
+			}
+			if fmt.Sprint(got) != want {
+				t.Errorf("Stalinsort(%v, %v) cannot sort; got %v, want %v", ctx, tc, got, want)
+			}
+		})
 	}
 }
 
@@ -51,12 +61,17 @@ func TestStalinsortString(t *testing.T) {
 		"[a b]":       {"a", "", "b"},
 	}
 	for want, tc := range testcases {
-		got, err := Stalinsort(ctx, tc)
-		if err != nil {
-			t.Errorf("Stalinsort(%v, %v) returns error: %v", ctx, tc, err)
-		}
-		if fmt.Sprint(got) != want {
-			t.Errorf("Stalinsort(%v, %v) cannot sort; got %v, want %v", ctx, tc, got, want)
-		}
+		want, tc := want, tc
+		t.Run(fmt.Sprint(tc), func(t *testing.T) {
+			t.Parallel()
+
+			got, err := Stalinsort(ctx, tc)
+			if err != nil {
+				t.Errorf("Stalinsort(%v, %v) returns error: %v", ctx, tc, err)
+			}
+			if fmt.Sprint(got) != want {
+				t.Errorf("Stalinsort(%v, %v) cannot sort; got %v, want %v", ctx, tc, got, want)
+			}
+		})
 	}
 }
