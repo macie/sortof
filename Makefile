@@ -27,7 +27,7 @@ test:
 	@echo '# Unit tests: go test .' >&2
 	@go test .
 
-build: check test
+build: *.go
 	@echo '# Create release binary: ./dist/sortof' >&2
 	@CURRENT_VER_TAG="$$(git tag --points-at HEAD | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
 		PREV_VER_TAG="$$(git tag | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
@@ -36,7 +36,7 @@ build: check test
 		VERSION="$${CURRENT_VER_TAG:-$$PSEUDOVERSION}"; \
 		go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../../dist/sortof'; \
 
-dist: check test
+dist: *.go
 	@echo '# Create release binaries in ./dist' >&2
 	@CURRENT_VER_TAG="$$(git tag --points-at HEAD | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
 		PREV_VER_TAG="$$(git tag | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
@@ -54,7 +54,7 @@ install-dependencies:
 	@echo '# Install CLI dependencies:' >&2
 	@go get -v -x .
 
-cli-release:
+cli-release: check test
 	@echo '# Update local branch' >&2
 	@git pull --rebase
 	@echo '# Create new CLI release tag' >&2
@@ -64,7 +64,7 @@ cli-release:
 		git tag "cli/v$$VERSION"; \
 		git push --tags
 
-module-release:
+module-release: check test
 	@echo '# Update local branch' >&2
 	@git pull --rebase
 	@echo '# Create new Go module release tag' >&2
