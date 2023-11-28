@@ -33,7 +33,6 @@ func SlowsortFunc[S ~[]E, E any](ctx context.Context, x S, cmp func(a, b E) int)
 	return slowsort(ctx, x, 0, len(x)-1, cmp)
 }
 
-
 // slowsort sorts x[i:j].
 // The algorithm is based on multiple and surrender design with cancellation.
 // slowsort paper: https://doi.org/10.1145/990534.990536
