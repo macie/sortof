@@ -1,6 +1,7 @@
 # sortof
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/macie/sortof.svg)](https://pkg.go.dev/github.com/macie/sortof)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8153/badge)](https://www.bestpractices.dev/projects/8153)
 [![Quality check status](https://github.com/macie/sortof/actions/workflows/check.yml/badge.svg)](https://github.com/macie/sortof/actions/workflows/check.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/macie/sortof)](https://goreportcard.com/report/github.com/macie/sortof)
 
