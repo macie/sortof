@@ -27,6 +27,20 @@ test:
 	@echo '# Unit tests: go test .' >&2
 	@go test .
 
+e2e:
+	@echo '# E2E tests of ./dist/sortof' >&2
+	@printf '1\n2\n3\n' >test_case.sorted
+	@printf '1\n3\n2\n' >test_case.unsorted
+	@printf '1\n3\n' >test_case.stalinsorted
+	./dist/sortof -v
+	./dist/sortof -h
+	./dist/sortof bogo <test_case.unsorted | diff test_case.sorted -
+	./dist/sortof bogo -t 5s <test_case.unsorted | diff test_case.sorted -
+	./dist/sortof slow <test_case.unsorted | diff test_case.sorted -
+	./dist/sortof slow -t 100ms <test_case.unsorted | diff test_case.sorted -
+	./dist/sortof stalin <test_case.unsorted | diff test_case.stalinsorted -
+	./dist/sortof stalin -t 400000ns <test_case.unsorted | diff test_case.stalinsorted -
+
 build: *.go
 	@echo '# Create release binary: ./dist/sortof' >&2
 	@CURRENT_VER_TAG="$$(git tag --points-at HEAD | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
