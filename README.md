@@ -42,6 +42,7 @@ Use `make` (GNU or BSD):
 
 - `make` - install dependencies
 - `make test` - runs test
+- `make e2e` - runs e2e tests for CLI
 - `make check` - static code analysis
 - `make build` - compile binaries from latest commit
 - `make dist` - compile binaries from latest commit for supported OSes

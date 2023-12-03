@@ -1,0 +1,89 @@
+name: CLI E2E tests
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    name: Linux
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Setup Go
+        uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
+        with:
+          go-version: 'stable'
+
+      - name: Install dependencies
+        run: make
+
+      - name: Build executable
+        run: make build
+
+      - run: make e2e
+
+  windows:
+    name: Windows
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Setup Go
+        uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
+        with:
+          go-version: 'stable'
+
+      - name: Install dependencies
+        run: make
+
+      - name: Build executable
+        run: make build
+
+      - run: make e2e
+
+  openbsd:
+    name: OpenBSD
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Setup Go
+        uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
+        with:
+          go-version: 'stable'
+
+      - name: Install dependencies
+        run: make
+
+      - name: Build executable for OpenBSD amd64
+        run: GOOS=openbsd GOARCH=amd64 make build
+
+      - name: Run E2E tests inside VM
+        uses: vmactions/openbsd-vm@b88817d1e198a3679fff3da785a851349da57746 # v1.0.2
+        with:
+          run: |
+            make e2e
