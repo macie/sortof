@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -55,7 +56,14 @@ func main() {
 	for _, file := range files {
 		sorted, err := config.SortFunc(ctx, file)
 		if err != nil {
-			log.Println(err)
+			switch {
+			case err == context.Canceled:
+				log.Println("sorting cancelled by user")
+			case err == context.DeadlineExceeded:
+				log.Println("sorting needs more time than expected")
+			default:
+				log.Println(err)
+			}
 			os.Exit(1)
 		}
 
