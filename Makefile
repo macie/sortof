@@ -13,6 +13,17 @@
 
 
 #
+# PUBLIC MACROS
+#
+
+CLI     = sortof
+DESTDIR = ./dist
+GO      = go
+GOFLAGS = 
+LDFLAGS = -ldflags "-s -w -X main.AppVersion=$(CLI_VERSION)"
+
+
+#
 # INTERNAL MACROS
 #
 
@@ -33,64 +44,64 @@ all: install-dependencies
 
 .PHONY: clean
 clean:
-	@echo '# Delete binaries: rm -rf ./dist' >&2
-	@rm -rf ./dist
+	@echo '# Delete bulid directory' >&2
+	rm -rf ./dist
 
 .PHONY: info
 info:
 	@printf '# OS info: '
 	@uname -rsv;
 	@echo '# Development dependencies:'
-	@go version || true
+	@$(GO) version || true
 	@echo '# Go environment variables:'
-	@go env || true
+	@$(GO) env || true
 
 .PHONY: check
 check:
-	@echo '# Static analysis: go vet' >&2
-	@go vet
+	@echo '# Static analysis' >&2
+	$(GO) vet
 
 .PHONY: test
 test:
-	@echo '# Unit tests: go test .' >&2
-	@go test .
+	@echo '# Unit tests' >&2
+	@$(GO) test .
 
 .PHONY: e2e
 e2e:
-	@echo '# E2E tests of ./dist/sortof' >&2
+	@echo '# E2E tests of $(DESTDIR)/$(CLI)' >&2
 	@printf '1\n2\n3\n' >test_case.sorted
 	@printf '1\n3\n2\n' >test_case.unsorted
 	@printf '1\n3\n' >test_case.stalinsorted
-	./dist/sortof -v
-	./dist/sortof -h
-	./dist/sortof bogo <test_case.unsorted | diff test_case.sorted -
-	./dist/sortof bogo -t 5s <test_case.unsorted | diff test_case.sorted -
-	./dist/sortof miracle <test_case.sorted | diff test_case.sorted -
-	./dist/sortof miracle -t 1ms <test_case.unsorted 2>&1 | grep '^sortof: '
-	./dist/sortof slow <test_case.unsorted | diff test_case.sorted -
-	./dist/sortof slow -t 100ms <test_case.unsorted | diff test_case.sorted -
-	./dist/sortof stalin <test_case.unsorted | diff test_case.stalinsorted -
-	./dist/sortof stalin -t 400000ns <test_case.unsorted | diff test_case.stalinsorted -
+	$(DESTDIR)/$(CLI) -v
+	$(DESTDIR)/$(CLI) -h
+	$(DESTDIR)/$(CLI) bogo <test_case.unsorted | diff test_case.sorted -
+	$(DESTDIR)/$(CLI) bogo -t 5s <test_case.unsorted | diff test_case.sorted -
+	$(DESTDIR)/$(CLI) miracle <test_case.sorted | diff test_case.sorted -
+	$(DESTDIR)/$(CLI) miracle -t 1ms <test_case.unsorted 2>&1 | grep '^sortof: '
+	$(DESTDIR)/$(CLI) slow <test_case.unsorted | diff test_case.sorted -
+	$(DESTDIR)/$(CLI) slow -t 100ms <test_case.unsorted | diff test_case.sorted -
+	$(DESTDIR)/$(CLI) stalin <test_case.unsorted | diff test_case.stalinsorted -
+	$(DESTDIR)/$(CLI) stalin -t 400000ns <test_case.unsorted | diff test_case.stalinsorted -
 
 .PHONY: build
 build:
-	@echo '# Create release binary: ./dist/sortof' >&2
-	go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$(CLI_VERSION)" -o '../../dist/sortof'; \
+	@echo '# Build CLI executable: $(DESTDIR)/$(CLI)' >&2
+	$(GO) build -C $(CLI_DIR) $(GOFLAGS) $(LDFLAGS) -o '../../$(DESTDIR)/$(CLI)'
 
 .PHONY: dist
 dist:
-	@echo '# Create release binaries in ./dist' >&2
-	GOOS=openbsd GOARCH=amd64 go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$(CLI_VERSION)" -o '../../dist/sortof-openbsd_amd64'
-	GOOS=linux GOARCH=amd64 go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$(CLI_VERSION)" -o '../../dist/sortof-linux_amd64'
-	GOOS=windows GOARCH=amd64 go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$(CLI_VERSION)" -o '../../dist/sortof-windows_amd64.exe'
+	@echo '# Create release binaries in $(DESTDIR)' >&2
+	CLI=sortof-openbsd_amd64 GOOS=openbsd GOARCH=amd64 $(GO) build -C $(CLI_DIR) $(GOFLAGS) $(LDFLAGS) -o '../../$(DESTDIR)/$(CLI)'
+	CLI=sortof-linux_amd64 GOOS=linux GOARCH=amd64 $(GO) build -C $(CLI_DIR) $(GOFLAGS) $(LDFLAGS) -o '../../$(DESTDIR)/$(CLI)'
+	CLI=sortof-windows_amd64.exe GOOS=windows GOARCH=amd64 $(GO) build -C $(CLI_DIR) $(GOFLAGS) $(LDFLAGS) -o '../../$(DESTDIR)/$(CLI)'
 
 	@echo '# Create binaries checksum' >&2
-	@sha256sum ./dist/* >./dist/sha256sum.txt
+	@sha256sum $(DESTDIR)/* >$(DESTDIR)/sha256sum.txt
 
 .PHONY: install-dependencies
 install-dependencies:
 	@echo '# Install CLI dependencies:' >&2
-	@go get -v -x .
+	@GOFLAGS='-v -x' $(GO) get -C $(CLI_DIR) $(GOFLAGS) .
 
 .PHONY: cli-release
 cli-release: check test
