@@ -1,16 +1,37 @@
+# This Makefile intended to be POSIX-compliant (2018 edition with .PHONY target).
+#
+# .PHONY targets are used by:
+#  - task definintions
+#  - compilation of Go code (force usage of `go build` to changes detection).
+#
+# More info:
+#  - docs: <https://pubs.opengroup.org/onlinepubs/9699919799/utilities/make.html>
+#  - .PHONY: <https://www.austingroupbugs.net/view.php?id=523>
+#
 .POSIX:
 .SUFFIXES:
 
+
+#
+# INTERNAL MACROS
+#
+
 CLI_DIR = ./cmd/sortof
 
-# MAIN TARGETS
 
+#
+# DEVELOPMENT TASKS
+#
+
+.PHONY: all
 all: install-dependencies
 
+.PHONY: clean
 clean:
 	@echo '# Delete binaries: rm -rf ./dist' >&2
 	@rm -rf ./dist
 
+.PHONY: info
 info:
 	@printf '# OS info: '
 	@uname -rsv;
@@ -19,14 +40,17 @@ info:
 	@echo '# Go environment variables:'
 	@go env || true
 
+.PHONY: check
 check:
 	@echo '# Static analysis: go vet' >&2
 	@go vet
-	
+
+.PHONY: test
 test:
 	@echo '# Unit tests: go test .' >&2
 	@go test .
 
+.PHONY: e2e
 e2e:
 	@echo '# E2E tests of ./dist/sortof' >&2
 	@printf '1\n2\n3\n' >test_case.sorted
@@ -43,7 +67,8 @@ e2e:
 	./dist/sortof stalin <test_case.unsorted | diff test_case.stalinsorted -
 	./dist/sortof stalin -t 400000ns <test_case.unsorted | diff test_case.stalinsorted -
 
-build: *.go
+.PHONY: build
+build:
 	@echo '# Create release binary: ./dist/sortof' >&2
 	@CURRENT_VER_TAG="$$(git tag --points-at HEAD | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
 		PREV_VER_TAG="$$(git tag | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
@@ -52,7 +77,8 @@ build: *.go
 		VERSION="$${CURRENT_VER_TAG:-$$PSEUDOVERSION}"; \
 		go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../../dist/sortof'; \
 
-dist: *.go
+.PHONY: dist
+dist:
 	@echo '# Create release binaries in ./dist' >&2
 	@CURRENT_VER_TAG="$$(git tag --points-at HEAD | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
 		PREV_VER_TAG="$$(git tag | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
@@ -66,10 +92,12 @@ dist: *.go
 	@echo '# Create binaries checksum' >&2
 	@sha256sum ./dist/* >./dist/sha256sum.txt
 
+.PHONY: install-dependencies
 install-dependencies:
 	@echo '# Install CLI dependencies:' >&2
 	@go get -v -x .
 
+.PHONY: cli-release
 cli-release: check test
 	@echo '# Update local branch' >&2
 	@git pull --rebase
@@ -80,6 +108,7 @@ cli-release: check test
 		git tag "cli/v$$VERSION"; \
 		git push --tags
 
+.PHONY: module-release
 module-release: check test
 	@echo '# Update local branch' >&2
 	@git pull --rebase
