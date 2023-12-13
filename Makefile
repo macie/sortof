@@ -16,7 +16,12 @@
 # INTERNAL MACROS
 #
 
-CLI_DIR = ./cmd/sortof
+CLI_DIR               = ./cmd/sortof
+CLI_CURRENT_VER_TAG   = $$(git tag --points-at HEAD | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)
+CLI_LATEST_VERSION    = $$(git tag | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)
+CLI_PSEUDOVERSION     = $$(VER="$(CLI_LATEST_VERSION)"; echo "$${VER:-0001.01}")-$$(TZ=UTC git --no-pager show --quiet --abbrev=12 --date='format-local:%Y%m%d%H%M%S' --format='%cd-%h')
+CLI_VERSION           = $$(VER="$(CLI_CURRENT_VER_TAG)"; echo "$${VER:-$(CLI_PSEUDOVERSION)}")
+MODULE_LATEST_VERSION = $$(git tag | grep "^v" | sed 's/^v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)
 
 
 #
@@ -70,24 +75,14 @@ e2e:
 .PHONY: build
 build:
 	@echo '# Create release binary: ./dist/sortof' >&2
-	@CURRENT_VER_TAG="$$(git tag --points-at HEAD | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
-		PREV_VER_TAG="$$(git tag | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
-		CURRENT_COMMIT_TAG="$$(TZ=UTC git --no-pager show --quiet --abbrev=12 --date='format-local:%Y%m%d%H%M%S' --format='%cd-%h')"; \
-		PSEUDOVERSION="$${PREV_VER_TAG:-0001.01}-$$CURRENT_COMMIT_TAG"; \
-		VERSION="$${CURRENT_VER_TAG:-$$PSEUDOVERSION}"; \
-		go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../../dist/sortof'; \
+	go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$(CLI_VERSION)" -o '../../dist/sortof'; \
 
 .PHONY: dist
 dist:
 	@echo '# Create release binaries in ./dist' >&2
-	@CURRENT_VER_TAG="$$(git tag --points-at HEAD | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
-		PREV_VER_TAG="$$(git tag | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1)"; \
-		CURRENT_COMMIT_TAG="$$(TZ=UTC git --no-pager show --quiet --abbrev=12 --date='format-local:%Y%m%d%H%M%S' --format='%cd-%h')"; \
-		PSEUDOVERSION="$${PREV_VER_TAG:-0001.01}-$$CURRENT_COMMIT_TAG"; \
-		VERSION="$${CURRENT_VER_TAG:-$$PSEUDOVERSION}"; \
-		GOOS=openbsd GOARCH=amd64 go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../../dist/sortof-openbsd_amd64'; \
-		GOOS=linux GOARCH=amd64 go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../../dist/sortof-linux_amd64'; \
-		GOOS=windows GOARCH=amd64 go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$$VERSION" -o '../../dist/sortof-windows_amd64.exe'; \
+	GOOS=openbsd GOARCH=amd64 go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$(CLI_VERSION)" -o '../../dist/sortof-openbsd_amd64'
+	GOOS=linux GOARCH=amd64 go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$(CLI_VERSION)" -o '../../dist/sortof-linux_amd64'
+	GOOS=windows GOARCH=amd64 go build -C $(CLI_DIR) -ldflags="-s -w -X main.AppVersion=$(CLI_VERSION)" -o '../../dist/sortof-windows_amd64.exe'
 
 	@echo '# Create binaries checksum' >&2
 	@sha256sum ./dist/* >./dist/sha256sum.txt
@@ -102,10 +97,9 @@ cli-release: check test
 	@echo '# Update local branch' >&2
 	@git pull --rebase
 	@echo '# Create new CLI release tag' >&2
-	@PREV_VER_TAG=$$(git tag | grep "^cli" | sed 's/^cli\/v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1); \
-		printf 'Choose new version number for CLI (calver; >%s): ' "$${PREV_VER_TAG:-2023.10}"
-	@read -r VERSION; \
-		git tag "cli/v$$VERSION"; \
+	@VER="$(CLI_LATEST_VERSION)"; printf 'Choose new version number for CLI (calver; >%s): ' "$${VER:-2023.10}"
+	@read -r NEW_VERSION; \
+		git tag "cli/v$$NEW_VERSION"; \
 		git push --tags
 
 .PHONY: module-release
@@ -113,8 +107,7 @@ module-release: check test
 	@echo '# Update local branch' >&2
 	@git pull --rebase
 	@echo '# Create new Go module release tag' >&2
-	@PREV_VER_TAG=$$(git tag | grep "^v" | sed 's/^v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -1); \
-		printf 'Choose new version number for module (semver; >%s): ' "$${PREV_VER_TAG:-0.0.0}"
-	@read -r VERSION; \
-		git tag "v$$VERSION"; \
+	@VER="$(MODULE_LATEST_VERSION)"; printf 'Choose new version number for module (semver; >%s): ' "$${VER:-0.0.0}"
+	@read -r NEW_VERSION; \
+		git tag "v$$NEW_VERSION"; \
 		git push --tags
