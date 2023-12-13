@@ -43,9 +43,10 @@ jobs:
         run: make
 
       - name: Build executable
-        run: make build
+        run: make sortof-linux_amd64
 
-      - run: make e2e
+      - name: Run E2E tests
+        run: make CLI=sortof-linux_amd64 e2e
 
   windows:
     name: Windows
@@ -69,9 +70,10 @@ jobs:
         run: make
 
       - name: Build executable
-        run: make build
+        run: make sortof-windows_amd64.exe
 
-      - run: make e2e
+      - name: Run E2E tests
+        run: make CLI=sortof-windows_amd64.exe e2e
 
   openbsd:
     name: OpenBSD
@@ -112,10 +114,10 @@ jobs:
         run: make
 
       - name: Build executable for OpenBSD amd64
-        run: GOOS=openbsd GOARCH=amd64 make build
+        run: make sortof-openbsd_amd64
 
       - name: Run E2E tests inside VM
         uses: vmactions/openbsd-vm@c69c6aa05e19f11533a5d00913e398606bd66133 # v1.0.4
         with:
           run: |
-            make e2e
+            make CLI=sortof-openbsd_amd64 e2e

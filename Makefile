@@ -87,16 +87,11 @@ e2e:
 build:
 	@echo '# Build CLI executable: $(DESTDIR)/$(CLI)' >&2
 	$(GO) build -C $(CLI_DIR) $(GOFLAGS) $(LDFLAGS) -o '../../$(DESTDIR)/$(CLI)'
+	@echo '# Add executable checksum to: $(DESTDIR)/sha256sum.txt' >&2
+	cd $(DESTDIR); sha256sum $(CLI) >> sha256sum.txt
 
 .PHONY: dist
-dist:
-	@echo '# Create release binaries in $(DESTDIR)' >&2
-	CLI=sortof-openbsd_amd64 GOOS=openbsd GOARCH=amd64 $(GO) build -C $(CLI_DIR) $(GOFLAGS) $(LDFLAGS) -o '../../$(DESTDIR)/$(CLI)'
-	CLI=sortof-linux_amd64 GOOS=linux GOARCH=amd64 $(GO) build -C $(CLI_DIR) $(GOFLAGS) $(LDFLAGS) -o '../../$(DESTDIR)/$(CLI)'
-	CLI=sortof-windows_amd64.exe GOOS=windows GOARCH=amd64 $(GO) build -C $(CLI_DIR) $(GOFLAGS) $(LDFLAGS) -o '../../$(DESTDIR)/$(CLI)'
-
-	@echo '# Create binaries checksum' >&2
-	@sha256sum $(DESTDIR)/* >$(DESTDIR)/sha256sum.txt
+dist: sortof-linux_amd64 sortof-openbsd_amd64 sortof-windows_amd64.exe
 
 .PHONY: install-dependencies
 install-dependencies:
@@ -122,3 +117,20 @@ module-release: check test
 	@read -r NEW_VERSION; \
 		git tag "v$$NEW_VERSION"; \
 		git push --tags
+
+
+#
+# SUPPORTED EXECUTABLES
+#
+
+# this forces using `go build` for changes detection in Go related files (instead of `make`)
+.PHONY: sortof-linux_amd64 sortof-openbsd_amd64 sortof-windows_amd64.exe
+
+sortof-linux_amd64:
+	GOOS=linux GOARCH=amd64 $(MAKE) CLI=$@ build
+
+sortof-openbsd_amd64:
+	GOOS=openbsd GOARCH=amd64 $(MAKE) CLI=$@ build
+
+sortof-windows_amd64.exe:
+	GOOS=windows GOARCH=amd64 $(MAKE) CLI=$@ build
