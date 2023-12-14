@@ -49,6 +49,11 @@ jobs:
             github.com:443
             objects.githubusercontent.com:443
             proxy.golang.org:443
+            ppa.launchpadcontent.net:443
+            packages.microsoft.com:443
+            azure.archive.ubuntu.com:80
+            motd.ubuntu.com:443
+            esm.ubuntu.com:443
             uploads.github.com:443
 
       - name: Checkout repository
