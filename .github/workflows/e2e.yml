@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Setup seccomp
-        uses: awalsh128/cache-apt-pkgs-action@44c33b32f808cdddd5ac0366d70595ed63661ed8 # v1.3.1
+        uses: awalsh128/cache-apt-pkgs-action@2555a377dfb0ca4763693499998da808e8d5afa0 # v1.4.1
         with:
           packages: libseccomp-dev
 
