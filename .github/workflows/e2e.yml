@@ -117,7 +117,7 @@ jobs:
         run: make sortof-openbsd_amd64
 
       - name: Run E2E tests inside VM
-        uses: vmactions/openbsd-vm@9d5b45dcdbc99e6b2d15a6dc7e8c2ae06736bec4 # v1.0.7
+        uses: vmactions/openbsd-vm@eaa3d3f695a5a52971c23958f6dd4cd3397f959d # v1.0.8
         with:
           run: |
             make CLI=sortof-openbsd_amd64 e2e
