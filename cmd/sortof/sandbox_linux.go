@@ -22,10 +22,11 @@ func Sandbox() error {
 	// 7. Reset default filter action to `seccomp.ActKillProcess`
 	allowedSyscalls := []string{
 		// similar to stdio pledge
-		"clone3", "epoll_create1", "epoll_ctl", "epoll_pwait", "exit_group",
-		"fcntl", "futex", "getpid", "gettid", "mmap", "mprotect", "munmap",
-		"nanosleep", "pipe2", "read", "rseq", "rt_sigprocmask", "rt_sigreturn",
-		"sched_yield", "set_robust_list", "sigaltstack", "tgkill", "write",
+		"clone3", "epoll_create1", "epoll_ctl", "epoll_pwait", "eventfd2",
+		"exit_group", "fcntl", "futex", "getpid", "gettid", "mmap", "mprotect",
+		"munmap", "nanosleep", "pipe2", "read", "rseq", "rt_sigprocmask",
+		"rt_sigreturn", "sched_yield", "set_robust_list", "sigaltstack",
+		"tgkill", "write",
 
 		// similar to rpath pledge
 		"openat",
