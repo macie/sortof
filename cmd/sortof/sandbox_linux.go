@@ -46,9 +46,13 @@ func Sandbox() error {
 			return err
 		}
 
-		whitelist.AddRule(callId, seccomp.ActAllow)
+		if err := whitelist.AddRule(callId, seccomp.ActAllow); err != nil {
+			return err
+		}
 	}
-	whitelist.Load()
+	if err := whitelist.Load(); err != nil {
+		return err
+	}
 
 	return nil
 }
