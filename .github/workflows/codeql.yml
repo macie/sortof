@@ -49,6 +49,7 @@ jobs:
             github.com:443
             objects.githubusercontent.com:443
             proxy.golang.org:443
+            sum.golang.org:443
             ppa.launchpadcontent.net:443
             packages.microsoft.com:443
             azure.archive.ubuntu.com:80
