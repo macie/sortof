@@ -46,13 +46,19 @@ func slowsort[S ~[]E, E any](ctx context.Context, x S, i int, j int, cmp func(a,
 		}
 
 		mid := int(math.Floor(float64(i+j) / 2))
-		slowsort(ctx, x, i, mid, cmp)
-		slowsort(ctx, x, mid+1, j, cmp)
+		if err := slowsort(ctx, x, i, mid, cmp); err != nil {
+			return err
+		}
+		if err := slowsort(ctx, x, mid+1, j, cmp); err != nil {
+			return err
+		}
 		if cmp(x[j], x[mid]) == -1 {
 			x[mid], x[j] = x[j], x[mid]
 		}
 
-		slowsort(ctx, x, i, j-1, cmp)
+		if err := slowsort(ctx, x, i, j-1, cmp); err != nil {
+			return err
+		}
 	}
 
 	return nil

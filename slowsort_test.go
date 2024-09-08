@@ -6,6 +6,7 @@ import (
 	"math"
 	"slices"
 	"testing"
+	"time"
 )
 
 func TestSlowsortFloat(t *testing.T) {
@@ -85,5 +86,22 @@ func TestSlowsortString(t *testing.T) {
 				t.Errorf("Slowsort(%v, %v) cannot sort; got %v, want %v", ctx, tc, collection, want)
 			}
 		})
+	}
+}
+
+func TestSlowsortCancellation(t *testing.T) {
+	const testCaseSize = 10000
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Millisecond)
+	defer cancel()
+	tc := make([]int, testCaseSize)
+	want := make([]int, testCaseSize)
+	for i := 0; i < testCaseSize; i++ {
+		tc[i] = testCaseSize - i
+		want[i] = i
+	}
+
+	err := Slowsort(ctx, tc)
+	if err != context.DeadlineExceeded {
+		t.Errorf("Slowsort(ctx, tc) returned unexpected error: %v", err)
 	}
 }
