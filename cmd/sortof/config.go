@@ -37,9 +37,9 @@ var AppVersion = "local-dev"
 // AppConfig contains configuration options for the program provided by the user.
 type AppConfig struct {
 	SortFunc    func(ctx context.Context, file io.ReadCloser) ([]string, error)
+	ExitMessage string
 	Files       []string
 	Timeout     time.Duration
-	ExitMessage string
 }
 
 // NewAppConfig creates a new AppConfig from the given command line arguments.
