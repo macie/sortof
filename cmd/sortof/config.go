@@ -47,7 +47,7 @@ func NewAppConfig(cliArgs []string) (AppConfig, error) {
 	config := AppConfig{}
 
 	if len(cliArgs) == 0 {
-		return AppConfig{}, fmt.Errorf(helpMsg)
+		return AppConfig{}, fmt.Errorf("%s", helpMsg)
 	}
 
 	// global options

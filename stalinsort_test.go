@@ -11,7 +11,7 @@ func TestStalinsortFloat(t *testing.T) {
 	ctx := context.Background()
 	testcases := map[string][]float64{
 		"[1 2 3]":         {1, 2, 3},
-		"[NaN NaN 0 0 0]": {math.Log(-1), math.Log(-1), 0, -0.0, 0, math.Log(-1)},
+		"[NaN NaN 0 0 0]": {math.Log(-1), math.Log(-1), 0.0, -0, 0, math.Log(-1)},
 		fmt.Sprintf("[-1 2 %v]", math.MaxFloat64): {-1, 2, 0, math.Log(-1), math.MaxFloat64, math.Log(-1)},
 	}
 	for want, tc := range testcases {

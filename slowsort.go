@@ -45,7 +45,7 @@ func slowsort[S ~[]E, E any](ctx context.Context, x S, i int, j int, cmp func(a,
 			return nil
 		}
 
-		mid := int(math.Floor(float64((i + j) / 2)))
+		mid := int(math.Floor(float64(i+j) / 2))
 		slowsort(ctx, x, i, mid, cmp)
 		slowsort(ctx, x, mid+1, j, cmp)
 		if cmp(x[j], x[mid]) == -1 {
