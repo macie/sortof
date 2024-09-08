@@ -25,7 +25,9 @@ func main() {
 	}
 
 	if config.ExitMessage != "" {
-		fmt.Fprintln(os.Stdin, config.ExitMessage)
+		if _, err := fmt.Fprintln(os.Stdout, config.ExitMessage); err != nil {
+			panic(err)
+		}
 		os.Exit(0)
 	}
 
@@ -44,7 +46,12 @@ func main() {
 			log.Println(err)
 			os.Exit(1)
 		}
-		defer f.Close()
+		defer func() {
+			if err := f.Close(); err != nil {
+				log.Println(err)
+				os.Exit(1)
+			}
+		}()
 
 		files = append(files, f)
 	}
@@ -68,7 +75,9 @@ func main() {
 		}
 
 		for _, v := range sorted {
-			fmt.Fprintln(os.Stdout, v)
+			if _, err := fmt.Fprintln(os.Stdout, v); err != nil {
+				panic(err)
+			}
 		}
 	}
 
