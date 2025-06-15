@@ -3,9 +3,11 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: monthly
+      interval: "cron"
+      cronjob: "6 4 2 */3 *"
 
   - package-ecosystem: gomod
     directory: /
     schedule:
-      interval: monthly
+      interval: "cron"
+      cronjob: "6 4 2 */3 *"
