@@ -12,10 +12,13 @@
 
 Implemented algorithms:
 
-- [bogosort](https://en.wikipedia.org/wiki/Bogosort)
-- [miraclesort](https://en.wikipedia.org/wiki/Bogosort#miracle_sort)
-- [slowsort](https://en.wikipedia.org/wiki/Slowsort)
-- [stalinsort](https://mastodon.social/@mathew/100958177234287431).
+- impractical due to poor time complexity:
+    - [bogosort](https://en.wikipedia.org/wiki/Bogosort)
+    - [miraclesort](https://en.wikipedia.org/wiki/Bogosort#miracle_sort)
+    - [slowsort](https://en.wikipedia.org/wiki/Slowsort)
+
+- impractical due to destructive behavior:
+    - [stalinsort](https://mastodon.social/@mathew/100958177234287431)
 
 ## Usage
 
@@ -32,35 +35,37 @@ c
 
 ## Installation
 
-Download [latest stable release from GitHub](https://github.com/macie/sortof/releases/latest) .
+Download the [latest stable release from GitHub](https://github.com/macie/sortof/releases/latest).
 
-You can also build it manually with commands: `make && make build`.
+You can also build it manually with: `make && make build`.
 
 ## Development
+
+For detailed contribution guidelines, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 Use `make` (GNU or BSD):
 
 - `make` - install dependencies
-- `make test` - runs test
-- `make e2e` - runs e2e tests for CLI
-- `make check` - static code analysis
+- `make test` - run tests
+- `make e2e` - run end-to-end tests for CLI
+- `make check` - run static code analysis
 - `make build` - compile binaries from latest commit
 - `make dist` - compile binaries from latest commit for supported OSes
-- `make clean` - removes compilation artifacts
+- `make clean` - remove compilation artifacts
 - `make cli-release` - tag latest commit as a new release of CLI
 - `make module-release` - tag latest commit as a new release of Go module
 - `make info` - print system info (useful for debugging).
 
 ### Versioning
 
-The repo contains CLI and Go module which can be developed with different pace.
+This repository contains both a CLI and Go module which can be developed at different paces.
 Commits with versions are tagged with:
 - `vX.X.X` (_[semantic versioning](https://semver.org/)_) - versions of Go module
 - `cli/vYYYY.0M.MICRO` (_[calendar versioning](https://calver.org/)_) - versions of command-line utility.
 
 ### Security hardening
 
-On modern Linuxes and OpenBSD, CLI application has restricted access to kernel
+On modern Linux distributions and OpenBSD, the CLI application has restricted access to kernel
 calls with [seccomp](https://en.wikipedia.org/wiki/Seccomp) and [pledge](https://man.openbsd.org/pledge.2).
 
 ## License
