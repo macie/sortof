@@ -18,6 +18,7 @@ Implemented algorithms:
     - [slowsort](https://en.wikipedia.org/wiki/Slowsort)
 
 - impractical due to destructive behavior:
+    - [hitlersort](https://devrant.com/rants/2066915/hitler-sort-delete-every-odd-element)
     - [stalinsort](https://mastodon.social/@mathew/100958177234287431)
 
 ## Usage

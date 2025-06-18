@@ -20,6 +20,11 @@ func TestNewAppConfig(t *testing.T) {
 		{[]string{"bogo", "-t", "11s", "first_file", "second_file"}, AppConfig{
 			SortFunc: BogosortFile, Timeout: 11 * time.Second, Files: []string{"first_file", "second_file"},
 		}},
+		{[]string{"hitler"}, AppConfig{SortFunc: HitlersortFile}},
+		{[]string{"hitler", "-t", "3ms"}, AppConfig{SortFunc: HitlersortFile, Timeout: 3 * time.Millisecond}},
+		{[]string{"hitler", "-t", "30ms", "-"}, AppConfig{
+			SortFunc: HitlersortFile, Timeout: 30 * time.Millisecond, Files: []string{"-"},
+		}},
 		{[]string{"slow"}, AppConfig{SortFunc: SlowsortFile}},
 		{[]string{"slow", "-t", "5ns"}, AppConfig{SortFunc: SlowsortFile, Timeout: 5 * time.Nanosecond}},
 		{[]string{"slow", "-t", "5ns", "-"}, AppConfig{

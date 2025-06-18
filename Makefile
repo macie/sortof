@@ -85,11 +85,14 @@ e2e:
 	@echo '# E2E tests of $(DESTDIR)/$(CLI)' >&2
 	@printf '1\n2\n3\n' >test_case.sorted
 	@printf '1\n3\n2\n' >test_case.unsorted
+	@printf '1\n2\n' >test_case.hitlersorted
 	@printf '1\n3\n' >test_case.stalinsorted
 	$(DESTDIR)/$(CLI) -v
 	$(DESTDIR)/$(CLI) -h
 	$(DESTDIR)/$(CLI) bogo <test_case.unsorted | diff test_case.sorted -
 	$(DESTDIR)/$(CLI) bogo -t 5s <test_case.unsorted | diff test_case.sorted -
+	$(DESTDIR)/$(CLI) hitler <test_case.unsorted | diff test_case.hitlersorted -
+	$(DESTDIR)/$(CLI) hitler -t 1s <test_case.unsorted | diff test_case.hitlersorted -
 	$(DESTDIR)/$(CLI) miracle <test_case.sorted | diff test_case.sorted -
 	$(DESTDIR)/$(CLI) miracle -t 1ms <test_case.unsorted 2>&1 | grep '^sortof: '
 	$(DESTDIR)/$(CLI) slow <test_case.unsorted | diff test_case.sorted -

@@ -104,3 +104,26 @@ func StalinsortFile(ctx context.Context, file io.ReadCloser) ([]string, error) {
 
 	return sorted, nil
 }
+
+// HitlersortFile returns sorted lines by repeatedly removing elements at odd indices until sorted.
+// A context controls cancellation.
+func HitlersortFile(ctx context.Context, file io.ReadCloser) ([]string, error) {
+	lines := []string{}
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		select {
+		case <-ctx.Done():
+			return []string{}, context.Cause(ctx)
+		default:
+			lines = append(lines, scanner.Text())
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return []string{}, err
+	}
+	sorted, err := sortof.Hitlersort(ctx, lines)
+	if err != nil {
+		return []string{}, err
+	}
+	return sorted, nil
+}
